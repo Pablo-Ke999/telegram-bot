@@ -1,49 +1,48 @@
-{
-  "_comment": "This file is intentionally valid JSON. JSON does not allow real comments, so fields named _comment explain what each section does.",
-  "bot": {
-    "_comment": "Basic public identity for the bot. Change these values freely without touching code.",
-    "name": "El-patron_ywobi Bot",
-    "description": "A friendly Telegram assistant that can answer questions and react to simple commands."
-  },
-  "ai": {
-    "_comment": "AI personality and response settings. Temperature is clamped between 0.1 and 1.0 by the config loader.",
-    "provider": "openai",
-    "model": "llama-3.1-8b-instant",
-    "systemPrompt": "You are a helpful, concise Telegram assistant. Use plain English, be friendly, and avoid technical jargon unless the user asks for it.",
-    "temperature": 0.7,
-    "maxTokens": 600,
-    "requestTimeoutMs": 30000,
-    "retryAttempts": 2,
-    "mockModeMessage": "Mock mode is active because no AI API key was found. I received your message and the bot wiring works!"
-  },
-  "security": {
-    "_comment": "Put Telegram numeric user IDs here to restrict access. Leave the list empty to allow anyone to use the bot.",
-    "allowedUsers": []
-  },
-  "behavior": {
-    "_comment": "General bot behavior that non-developers may want to change.",
-    "friendlyErrorMessage": "Sorry, I'm having a brain freeze. Ping the admin.",
-    "unauthorizedMessage": "Sorry, this bot is private and your Telegram account is not on the allowed list.",
-    "emptyMessageReply": "Please send me a text message so I can help."
-  },
-  "responseTriggers": [
-    {
-      "_comment": "Exact command trigger used by Telegram. This is also handled by src/commands/start.js, but keeping it here makes the welcome copy easy to edit.",
-      "keyword": "/start",
-      "matchType": "exact",
-      "reply": "Hi! I'm El-patron_ywobi Bot. Send /ping to test me, /help for ideas, or just type a question."
-    },
-    {
-      "_comment": "Example help trigger. You can add more trigger objects using the same shape.",
-      "keyword": "/help",
-      "matchType": "exact",
-      "reply": "Try asking a question in plain English. Admins can change my personality, allowed users, and trigger replies in config.json."
-    },
-    {
-      "_comment": "Example keyword trigger. If a message contains the word pricing, the bot sends this reply before calling AI.",
-      "keyword": "pricing",
-      "matchType": "contains",
-      "reply": "For pricing questions, please share which product or service you mean and I will help from there."
-    }
-  ]
-}
+# =============================================================================
+#  BOT IDENTITY
+# =============================================================================
+bot:
+  name: "El-patron_ywobi Bot"
+  description: "A friendly Telegram assistant that can answer questions and react to simple commands."
+
+# =============================================================================
+#  AI / LLM SETTINGS  (provider: groq | openai)
+# =============================================================================
+ai:
+  provider: "groq"
+  model: "llama-3.1-8b-instant"
+  systemPrompt: "You are a helpful, concise Telegram assistant. Use plain English, be friendly, and avoid technical jargon unless the user asks for it."
+  temperature: 0.7
+  maxTokens: 600
+  requestTimeoutMs: 30000
+  retryAttempts: 2
+  fallbackMockMessage: "Mock mode is active. The bot received your message but no AI key is configured."
+
+# =============================================================================
+#  SECURITY (leave empty to allow everyone)
+# =============================================================================
+allowedUsers: []
+
+# =============================================================================
+#  ADMIN USERS (can use sensitive commands like /logs, /broadcast, /setpersona)
+# =============================================================================
+adminUsers:
+  - 6090825708
+
+# =============================================================================
+#  RESPONSE TRIGGERS (exact match, no AI needed)
+# =============================================================================
+responseTriggers:
+  - keyword: "/start"
+    reply: "Hi! I'm El-patron_ywobi Bot. Send /ping to test me, /help for ideas, or just type a question."
+  - keyword: "/help"
+    reply: "Try asking a question in plain English. Admins can change my personality, allowed users, and trigger replies in config.yaml."
+  - keyword: "pricing"
+    reply: "For pricing questions, please share which product or service you mean and I will help from there."
+
+# =============================================================================
+#  DEFAULTS
+# =============================================================================
+defaults:
+  retryAttempts: 3
+  requestTimeoutMs: 10000

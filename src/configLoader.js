@@ -44,6 +44,7 @@ function loadConfig() {
   config.ai.model = config.ai.model ?? 'gpt-3.5-turbo';
   config.ai.fallbackMockMessage = config.ai.fallbackMockMessage ?? '🤖 Mock mode: I would reply to "{message}" here.';
 
+  config.adminUsers = config.adminUsers ?? [];
   config.allowedUsers = config.allowedUsers ?? [];
   config.responseTriggers = config.responseTriggers ?? [];
   config.defaults = config.defaults ?? {};
