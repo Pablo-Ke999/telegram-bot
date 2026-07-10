@@ -50,6 +50,8 @@ function loadConfig() {
   config.defaults = config.defaults ?? {};
   config.defaults.retryAttempts = config.defaults.retryAttempts ?? 3;
   config.defaults.requestTimeoutMs = config.defaults.requestTimeoutMs ?? 10000;
+  config.features = config.features ?? {};
+  config.features.enableToolCalling = config.features.enableToolCalling ?? true;
 
   return Object.freeze(config);
 }
