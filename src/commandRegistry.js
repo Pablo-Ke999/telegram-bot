@@ -32,4 +32,21 @@ function loadCommands() {
   console.log(`✅ Loaded ${commandMap.size} commands.`);
   return { commands: commandMap, descriptions };
 }
+
+// Add this function inside your CommandRegistry class or module
+
+function getCommandsList() {
+    // Assuming you have a collection/Map of loaded commands
+    // Adjust based on your actual structure
+    const commands = [];
+    for (const [name, cmd] of this.commands.entries()) { // or whatever you named your map
+        commands.push({
+            name: name, // e.g., '/start'
+            description: cmd.description || 'No description'
+        });
+    }
+    return commands;
+}
+
+module.exports = { getCommandsList, /* your other exports */ };
 module.exports = { loadCommands };

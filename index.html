@@ -314,6 +314,39 @@
                     console.log(prefix, style1, style2, ...args);
                 }
             }
+            // Fetch commands from your bot's backend API
+async function loadCommandButtons() {
+    const baseUrl = 'https://your-bot-backend-url.com'; // Replace with your Render/Railway URL
+    try {
+        const data = await window.smartFetch(`${baseUrl}/api/commands`);
+        if (data && data.commands) {
+            // Add action buttons dynamically to your UI
+            const footer = document.querySelector('.input-footer');
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.cssText = 'display:flex; gap:6px; flex-wrap:wrap; padding:4px 0;';
+            
+            data.commands.forEach(cmd => {
+                const btn = document.createElement('button');
+                btn.textContent = cmd.name;
+                btn.style.cssText = 'background:rgba(255,255,255,0.08); border:none; color:#fff; padding:4px 12px; border-radius:12px; font-size:12px; cursor:pointer;';
+                btn.onclick = () => {
+                    // Send the command as a user message in the chat
+                    document.getElementById('messageInput').value = cmd.name;
+                    sendMessage(); // Reuse your existing send function
+                };
+                buttonContainer.appendChild(btn);
+            });
+            
+            // Insert it above the input field
+            footer.parentNode.insertBefore(buttonContainer, footer);
+        }
+    } catch (e) {
+        appLog.error('Failed to load commands:', e);
+    }
+}
+
+// Call this when the app loads
+loadCommandButtons();
 
             // Expose logger globally
             window.appLog = {
@@ -437,6 +470,49 @@
 
         })();
 
+        // File upload handler
+const fileInput = document.getElementById('fileInput');
+const fileUploadBtn = document.getElementById('fileUploadBtn');
+
+fileUploadBtn.addEventListener('click', () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Show loading state
+    appLog.info(`📤 Uploading: ${file.name}`);
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('userId', tg.initDataUnsafe?.user?.id || 'unknown');
+
+    try {
+        // Send to your backend endpoint
+        const baseUrl = 'https://your-bot-backend-url.com';
+        const response = await fetch(`${baseUrl}/api/upload`, {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        
+        // Display bot's response to the file in the chat
+        if (result.reply) {
+            const botMsg = window.chatBuffer.add(result.reply, 'bot');
+            renderMessage(botMsg);
+        }
+    } catch (err) {
+        appLog.error('Upload failed:', err);
+        const botMsg = window.chatBuffer.add('❌ Failed to upload file. Please try again.', 'bot');
+        renderMessage(botMsg);
+    }
+
+    // Reset input
+    fileInput.value = '';
+});
+
         // ================================================================
         // 3. CHAT UI LOGIC (Renders messages beautifully)
         // ================================================================
@@ -513,3 +589,12 @@
     </script>
 </body>
 </html>
+
+<footer class="input-footer">
+    <!-- File Upload Button -->
+    <button class="file-btn" id="fileUploadBtn" style="background:rgba(255,255,255,0.05); border:none; color:#fff; font-size:20px; padding:8px 12px; border-radius:50%; cursor:pointer;">📎</button>
+    <input type="file" id="fileInput" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" style="display:none;" />
+    
+    <input type="text" id="messageInput" placeholder="Type a message..." />
+    <button class="send-btn" id="sendBtn">➤</button>
+</footer>
