@@ -1,0 +1,48 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Dependencies & Build
+node_modules
+npm-debug.log
+npm-error.log
+yarn-error.log
+package-lock.json
+
+# IDE & Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+.env.local
+.env.*.local
+
+# Runtime
+uploads
+users.json
+.npm
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs
+logs
+*.log
+
+# Temporary
+tmp
+temp
+dist
+build
+
+# Project-specific
+.github
+oracleJdk-26
